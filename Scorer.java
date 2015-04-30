@@ -39,7 +39,7 @@ public class Scorer {
 		}
 		int result = 0;
 		for (String opponent : OPPONENTS) {
-			engine.setVisible(true);
+			
 			engine.runBattle(new BattleSpecification(trials, new BattlefieldSpecification(800, 600), engine.getLocalRepository(ROBOT + "*," + opponent)), true);
 			result += engineResult;
 		}
