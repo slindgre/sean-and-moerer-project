@@ -8,284 +8,104 @@ import static robocode.util.Utils.*;
 import robocode.*;
 
 public class EvolvedRobot extends AdvancedRobot {
-    // Some sample parameters:
-    public double firePowerNear, firePowerFar, fire_f_melee, fire_f, closeD, farD;
-    double mapX;
-    double mapY;
-    double robotHeight;
-    double robotWidth;
-    double robotY;
-    double robotX;
-    double heading;
+	// Some sample parameters:
+	public double firePower, radius, aim, speed;
+	double mapX;
+	double mapY;
+	double robotHeight;
+	double robotWidth;
+	double robotY;
+	double robotX;
+	double heading;
+	boolean scan;
+	public void run() {
 
-    public void run() {
-    
-      System.out.println(System.getProperty("user.home"));
-            List < Double > parameters = new ArrayList < Double > ();
-            try {
-                BufferedReader reader = new BufferedReader(new FileReader(System.getProperty("user.home") + "/.robocode-genes"));
-                for (String line;
-                    (line = reader.readLine()) != null;) {
-                    parameters.add(Double.parseDouble(line));
-                }
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-            firePowerNear = parameters.get(0);
-            firePowerFar = parameters.get(1);
-            fire_f_melee = parameters.get(2);
-            fire_f = parameters.get(3);
-            closeD = parameters.get(4);
-            farD = parameters.get(5);
-
-            setAdjustRadarForGunTurn(true);
-
-            mapX = getBattleFieldWidth();
-            mapY = getBattleFieldHeight();
-            robotHeight = getHeight();
-            robotWidth = getWidth();
-            robotY = getY();
-            robotX = getX();
-            heading = getHeading();
-
-            if (heading < 180) {
-                turnLeft(heading);
-                turnRadarLeft(heading);
-            } else {
-                turnRight(360 - heading);
-                turnRadarRight(360 - heading);
-            }
-            turnGunRight(90);
-            turnRadarRight(90);
-
-            setColors(Color.blue, Color.red, Color.white);
-
-           
-           
-            while (true) {
-                setAhead(mapY - getY() - robotHeight); // go to top of map
-                execute();
-                while (getDistanceRemaining() > 0) {
-
-                    setTurnRadarRight(Rules.RADAR_TURN_RATE - Rules.GUN_TURN_RATE);
-                    execute();
-                    setTurnRadarLeft(Rules.RADAR_TURN_RATE - Rules.GUN_TURN_RATE);
-                    execute();
-                    setTurnRadarLeft(Rules.RADAR_TURN_RATE - Rules.GUN_TURN_RATE);
-                    execute();
-                    setTurnRadarRight(Rules.RADAR_TURN_RATE - Rules.GUN_TURN_RATE);
-                    execute();
-
-
-                }
-
-
-                setTurnRight(90); // turn right
-                setTurnRadarRight(90);
-                execute();
-                while (getTurnRemaining() > 0) {
-                    execute();
-                }
-
-                setAhead(mapX - getX() - robotHeight); // go to right wall
-                while (getDistanceRemaining() > 0) {
-                    setTurnRadarRight(Rules.RADAR_TURN_RATE - Rules.GUN_TURN_RATE);
-                    execute();
-                    setTurnRadarLeft(Rules.RADAR_TURN_RATE - Rules.GUN_TURN_RATE);
-                    execute();
-                    setTurnRadarLeft(Rules.RADAR_TURN_RATE - Rules.GUN_TURN_RATE);
-                    execute();
-                    setTurnRadarRight(Rules.RADAR_TURN_RATE - Rules.GUN_TURN_RATE);
-                    execute();
+		setAdjustRadarForGunTurn(true);
 
 
 
 
-                }
+		mapX = getBattleFieldWidth();
+		mapY = getBattleFieldHeight();
+		robotHeight = getHeight();
+		robotWidth = getWidth();
+		robotY = getY();
+		robotX = getX();
 
-                setTurnRight(90); // turn right
-                setTurnRadarRight(90);
-                execute();
-                while (getTurnRemaining() > 0) {
-                    execute();
-                }
-                setAhead(getY() - robotHeight); // go to bottom of map
-
-                while (getDistanceRemaining() > 0) {
-                    setTurnRadarRight(Rules.RADAR_TURN_RATE - Rules.GUN_TURN_RATE);
-                    execute();
-                    setTurnRadarLeft(Rules.RADAR_TURN_RATE - Rules.GUN_TURN_RATE);
-                    execute();
-                    setTurnRadarLeft(Rules.RADAR_TURN_RATE - Rules.GUN_TURN_RATE);
-                    execute();
-                    setTurnRadarRight(Rules.RADAR_TURN_RATE - Rules.GUN_TURN_RATE);
-                    execute();
-
-
-
-                }
-
-                setTurnRight(90); // turn right
-                setTurnRadarRight(90);
-                execute();
-                while (getTurnRemaining() > 0) {
-                    execute();
-                }
-                setAhead(getX() - robotHeight); // go to the left wall
-
-                while (getDistanceRemaining() > 0) {
-                    setTurnRadarRight(Rules.RADAR_TURN_RATE - Rules.GUN_TURN_RATE);
-                    execute();
-                    setTurnRadarLeft(Rules.RADAR_TURN_RATE - Rules.GUN_TURN_RATE);
-                    execute();
-                    setTurnRadarLeft(Rules.RADAR_TURN_RATE - Rules.GUN_TURN_RATE);
-                    execute();
-                    setTurnRadarRight(Rules.RADAR_TURN_RATE - Rules.GUN_TURN_RATE);
-                    execute();
-
-                }
-
-
-                setTurnRight(90); // turn right
-                setTurnRadarRight(90);
-                execute();
-                while (getTurnRemaining() > 0) {
-                    execute();
-                }
-
-
-
-                execute();
-            }
-            }
-            public void onScannedRobot(ScannedRobotEvent e) {
-                // Replace the next line with any behavior you would like
-
-                double angle = normalRelativeAngleDegrees(e.getBearing() + getHeading() - getGunHeading());
-                double radarAngle = normalRelativeAngleDegrees(getRadarHeading() - getHeading());
-                //double Bearing = e.getBearing();
+		heading = getHeading();
+		// Initialization of the robot should be put here
+		setColors(Color.black, Color.yellow, Color.black); // body,gun,radar
 
 
 
 
-                setTurnGunRight(angle);
-
-                if (getOthers() > 3) {
-
-                    if (Math.abs(angle) < 15 * fire_f_melee / 100.0) {
-                        setFire(3 * closeD / 100.0);
-
-                    }
-                } else if (getOthers() > 1) {
-
-                    if (Math.abs(angle) < 15 * fire_f / 100.0) {
-                        if (e.getDistance() < 500 * closeD / 100.0) {
-                            setFire(3 * firePowerNear / 100.0);
-                        } else if (e.getDistance() < 900 * farD) {
-                            setFire(1 * firePowerFar / 100.0);
-                        }
-                    }
-                } else if (getOthers() == 1) {
-
-
-                    setTurnRadarRight(radarAngle);
-                    execute();
-
-                    //setTurnGunLeft(Math.abs(getGunHeading()-getHeading()));
+		turnRadarRight(360);
 
 
 
-                    if (e.getBearing() > 0) {
-
-                        setTurnRight(e.getBearing());
-                        setAhead(100);
-                        setTurnRadarRight(Rules.RADAR_TURN_RATE);
-                        execute();
-                        setTurnRadarLeft(Rules.RADAR_TURN_RATE);
-                        execute();
-                        setTurnRadarLeft(Rules.RADAR_TURN_RATE);
-                        execute();
-                        setTurnRadarRight(Rules.RADAR_TURN_RATE);
-                        execute();
-
-
-                        if (Math.abs(angle) < 15 * fire_f / 100.0) {
-                            if (e.getDistance() < 500 * closeD / 100.0) {
-                                setFire(3 * firePowerNear / 100.0);
-                            } else if (e.getDistance() < 900 * farD / 100.0) {
-                                setFire(1 * firePowerFar / 100.0);
-                            }
-                        }
-
-                    }
-                    if (e.getBearing() < 0) {
-
-                        setTurnLeft(Math.abs(e.getBearing()));
-                        setAhead(100);
-                        setTurnRadarRight(Rules.RADAR_TURN_RATE);
-                        execute();
-                        setTurnRadarLeft(Rules.RADAR_TURN_RATE);
-                        execute();
-                        setTurnRadarLeft(Rules.RADAR_TURN_RATE);
-                        execute();
-                        setTurnRadarRight(Rules.RADAR_TURN_RATE);
-                        execute();
-
-
-                        if (Math.abs(angle) < 15 * fire_f / 100) {
-                            if (e.getDistance() < 750 * closeD / 100) {
-                                setFire(3 * firePowerNear / 100);
-                            } else if (e.getDistance() < 900 * farD / 100) {
-                                setFire(1 * firePowerFar / 100);
-                            }
-                        }
-
-                    }
-
-
-                }
-
-            }
+		// After trying out your robot, try uncommenting the import at the top,
+		// and the next line:
 
 
 
 
-            /**
-             * onHitByBullet: What to do when you're hit by a bullet
-             */
-            /*	public void onHitByBullet(HitByBulletEvent e) {
-		// Replace the next line with any behavior you would like
-	/*	double angle = normalRelativeAngleDegrees(e.getBearing() + getHeading() - getGunHeading());
-	setTurnGunLeft(e.getBearing());
-	 if (Math.abs(angle) < 3)  {
-		setFire(3);
+
+
+		// Robot main loop
+
+
+		while (true) {
+			// Replace the next 4 lines with any behavior you would like
+
+			
+
+			if (scan == false) {
+				setTurnRadarRight(360);
+			}
+			scan = false;
+			execute();
+
+
 		}
 
 	}
-	*/
+	/**
+	 * onScannedRobot: What to do when you see another robot
+	 */
+	public void onScannedRobot(ScannedRobotEvent e) {
+		double angle = normalRelativeAngleDegrees(e.getBearing() + getHeading() - getGunHeading());
+		double radarAngle = normalRelativeAngleDegrees(e.getBearing() + getHeading() - getRadarHeading());
+		//double Bearing = e.getBearing();
 
-            /**
-             * onHitWall: What to do when you hit a wall
-             */
-            public void onHitWall(HitWallEvent e) {
-                // Replace the next line with any behavior you would like
-
-
-            }
-
-
-            public void onHitRobot(HitRobotEvent e) {
-
-                if (getOthers() == 0) {
-                    double angle = normalRelativeAngleDegrees(e.getBearing() + getHeading() - getGunHeading());
-                    setTurnGunRight(angle);
-                    setTurnRight(e.getBearing());
-                    if (Math.abs(angle) < 3) {
-
-                        setFire(3);
-                    }
+		scan = true;
 
 
-                }
-            }
-        } 
+		setTurnGunRight(angle * 2 * aim / 100.0);
+
+
+		setTurnRadarRight(radarAngle * 1.1);
+
+
+		setTurnRight(e.getBearing() + 90 * radius / 100.0);
+		setAhead(speed * 20);
+	
+				setFire(3 * firePower / 100.0);
+
+		
+			
+		
+
+
+	}
+
+
+
+	public void onWin(WinEvent e) {
+		setColors(Color.black, Color.black, Color.black); // body,gun,radar
+
+		setTurnGunRight(360);
+		doNothing();
+
+	}
+
+}
