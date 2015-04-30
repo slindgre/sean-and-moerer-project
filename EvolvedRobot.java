@@ -172,17 +172,17 @@ public class EvolvedRobot extends AdvancedRobot {
 
                 if (getOthers() > 3) {
 
-                    if (Math.abs(angle) < fire_f_melee) {
-                        setFire(3);
+                    if (Math.abs(angle) < 15 * fire_f_melee / 100.0) {
+                        setFire(3 * closeD / 100.0);
 
                     }
                 } else if (getOthers() > 1) {
 
-                    if (Math.abs(angle) < fire_f) {
-                        if (e.getDistance() < closeD) {
-                            setFire(firePowerNear);
-                        } else if (e.getDistance() < farD) {
-                            setFire(firePowerFar);
+                    if (Math.abs(angle) < 15 * fire_f / 100.0) {
+                        if (e.getDistance() < 500 * closeD / 100.0) {
+                            setFire(3 * firePowerNear / 100.0);
+                        } else if (e.getDistance() < 900 * farD) {
+                            setFire(1 * firePowerFar / 100.0);
                         }
                     }
                 } else if (getOthers() == 1) {
@@ -209,11 +209,11 @@ public class EvolvedRobot extends AdvancedRobot {
                         execute();
 
 
-                        if (Math.abs(angle) < fire_f) {
-                            if (e.getDistance() < closeD) {
-                                setFire(firePowerNear);
-                            } else if (e.getDistance() < farD) {
-                                setFire(firePowerFar);
+                        if (Math.abs(angle) < 15 * fire_f / 100.0) {
+                            if (e.getDistance() < 500 * closeD / 100.0) {
+                                setFire(3 * firePowerNear / 100.0);
+                            } else if (e.getDistance() < 900 * farD / 100.0) {
+                                setFire(1 * firePowerFar / 100.0);
                             }
                         }
 
@@ -232,11 +232,11 @@ public class EvolvedRobot extends AdvancedRobot {
                         execute();
 
 
-                        if (Math.abs(angle) < fire_f) {
-                            if (e.getDistance() < closeD) {
-                                setFire(firePowerNear);
-                            } else if (e.getDistance() < farD) {
-                                setFire(firePowerFar);
+                        if (Math.abs(angle) < 15 * fire_f / 100) {
+                            if (e.getDistance() < 750 * closeD / 100) {
+                                setFire(3 * firePowerNear / 100);
+                            } else if (e.getDistance() < 900 * farD / 100) {
+                                setFire(1 * firePowerFar / 100);
                             }
                         }
 
