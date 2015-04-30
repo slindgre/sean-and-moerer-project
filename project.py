@@ -17,7 +17,7 @@ def eval_func(chromosome):
 	
    
 	
-	#print ['java', '-DNOSECURITY=true', '-classpath', 				'libs/robocode.jar:robots', 'evolve.Scorer'] + [repr(value) for value in chromosome]
+	print ['java', '-DNOSECURITY=true', '-classpath', 				'libs/robocode.jar:robots', 'evolve.Scorer'] + [repr(value) for value in chromosome]
    	chdir(ROBOCODE_DIRECTORY)
 	output = check_output(['java', '-DNOSECURITY=true', '-classpath', 				'libs/robocode.jar:robots', 'evolve.Scorer'] + [repr(value) for value in chromosome])
 	wins = int(output.split('\n')[-2])
@@ -27,10 +27,10 @@ def eval_func(chromosome):
 pyevolve.logEnable()
 
 # Genome instance, 1D List of 50 elements
-genome = G1DList.G1DList(6)
+genome = G1DList.G1DList(4)
 
 # Sets the range max and min of the 1D List
-genome.setParams(rangemin=0, rangemax=100)
+genome.setParams(rangemin=1, rangemax=100)
 
 
 # The evaluator function (evaluation function)
@@ -41,12 +41,12 @@ ga = GSimpleGA.GSimpleGA(genome)
 
 # Sets the population size
 pop = ga.getPopulation()
-pop.setPopulationSize(10)
+pop.setPopulationSize(2)
 
 # Set the Roulette Wheel selector method, the number of generations and
 # the termination criteria
 ga.selector.set(Selectors.GRouletteWheel)
-ga.setGenerations(2)
+ga.setGenerations(10)
 ga.terminationCriteria.set(GSimpleGA.ConvergenceCriteria)
 
 # Sets the DB Adapter, the resetDB flag will make the Adapter recreate
@@ -64,4 +64,4 @@ ga.evolve(freq_stats=20)
 # Best individual
 print ga.bestIndividual()
 
-print wins
+print eval_func(ga.bestIndividual())
