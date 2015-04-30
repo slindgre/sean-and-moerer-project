@@ -16,13 +16,13 @@ ROBOCODE_DIRECTORY = expanduser('~') + '/robocode'
 def eval_func(chromosome):
 	
    
-	for value in chromosome:
-  
-   		chdir(ROBOCODE_DIRECTORY)
-		output = check_output(['java', '-DNOSECURITY=true', '-classpath', 				'libs/robocode.jar:robots', 'evolve.Scorer'] + [repr(chromosome) for value in chromosome])
-		wins = int(output.split('\n')[-2])
-		return wins
-
+	
+	#print ['java', '-DNOSECURITY=true', '-classpath', 				'libs/robocode.jar:robots', 'evolve.Scorer'] + [repr(value) for value in chromosome]
+   	chdir(ROBOCODE_DIRECTORY)
+	output = check_output(['java', '-DNOSECURITY=true', '-classpath', 				'libs/robocode.jar:robots', 'evolve.Scorer'] + [repr(value) for value in chromosome])
+	wins = int(output.split('\n')[-2])
+	return wins
+		
 # Enable the pyevolve logging system
 pyevolve.logEnable()
 
@@ -39,10 +39,14 @@ genome.evaluator.set(eval_func)
 # Genetic Algorithm Instance
 ga = GSimpleGA.GSimpleGA(genome)
 
+# Sets the population size
+pop = ga.getPopulation()
+pop.setPopulationSize(10)
+
 # Set the Roulette Wheel selector method, the number of generations and
 # the termination criteria
 ga.selector.set(Selectors.GRouletteWheel)
-ga.setGenerations(5)
+ga.setGenerations(2)
 ga.terminationCriteria.set(GSimpleGA.ConvergenceCriteria)
 
 # Sets the DB Adapter, the resetDB flag will make the Adapter recreate
@@ -56,5 +60,8 @@ ga.setDBAdapter(sqlite_adapter)
 # frequency of 20 generations
 ga.evolve(freq_stats=20)
 
+
 # Best individual
 print ga.bestIndividual()
+
+print wins
