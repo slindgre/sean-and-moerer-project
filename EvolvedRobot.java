@@ -22,9 +22,6 @@ public class EvolvedRobot extends AdvancedRobot {
 
 		setAdjustRadarForGunTurn(true);
 
-
-
-
 		mapX = getBattleFieldWidth();
 		mapY = getBattleFieldHeight();
 		robotHeight = getHeight();
@@ -36,29 +33,16 @@ public class EvolvedRobot extends AdvancedRobot {
 		// Initialization of the robot should be put here
 		setColors(Color.black, Color.yellow, Color.black); // body,gun,radar
 
-
-
-
 		turnRadarRight(360);
-
-
 
 		// After trying out your robot, try uncommenting the import at the top,
 		// and the next line:
 
-
-
-
-
-
 		// Robot main loop
-
 
 		while (true) {
 			// Replace the next 4 lines with any behavior you would like
-
 			
-
 			if (scan == false) {
 				setTurnRadarRight(360);
 			}
@@ -90,11 +74,6 @@ public class EvolvedRobot extends AdvancedRobot {
 		setAhead(speed * 20);
 	
 				setFire(3 * firePower / 100.0);
-
-		
-			
-		
-
 
 	}
 
