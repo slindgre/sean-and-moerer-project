@@ -10,11 +10,7 @@ import pyevolve
 
 ROBOCODE_DIRECTORY = expanduser('~') + '/robocode'
 
-
-
-
-def eval_func(chromosome):
-	
+def eval_func(chromosome):	
    
 	
 	print ['java', '-DNOSECURITY=true', '-classpath', 				'libs/robocode.jar:robots', 'evolve.Scorer'] + [repr(value) for value in chromosome]
@@ -31,7 +27,6 @@ genome = G1DList.G1DList(4)
 
 # Sets the range max and min of the 1D List
 genome.setParams(rangemin=1, rangemax=100)
-
 
 # The evaluator function (evaluation function)
 genome.evaluator.set(eval_func)
@@ -64,4 +59,6 @@ ga.evolve(freq_stats=20)
 # Best individual
 print ga.bestIndividual()
 
-print eval_func(ga.bestIndividual())
+print 'Wins:' eval_func(ga.bestIndividual())
+
+# used http://pyevolve.sourceforge.net/ for some lines of code
